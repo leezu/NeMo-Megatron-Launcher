@@ -61,3 +61,15 @@ ENV RDMAV_FORK_SAFE=1             \
     FI_EFA_USE_DEVICE_RDMA=1
 
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
+
+
+# Patch NeMO  # /opt/bignlp/NeMo/nemo/
+RUN cd /opt/bignlp && \
+    pip uninstall -y nemo_toolkit sacrebleu && \
+    rm -r NeMo && \
+    git clone https://github.com/leezu/NeMo.git && \
+    cd NeMo && \
+    git checkout cc509884ffd2b00d30b45835a8fb8ff8b61e2c16 && \
+    pip install -e ".[nlp]" && \
+    cd nemo/collections/nlp/data/language_modeling/megatron && \
+    make
